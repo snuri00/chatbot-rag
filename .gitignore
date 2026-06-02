@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Local secrets
+.env
+.env.local
+.env.*.local
+
+# Model weights (download via download_model.sh)
+models/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Local workspace artefacts
+workspace/
+
+# Qdrant / data
+qdrant_storage/
+*.sqlite
+*.sqlite3
+*.db
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.log

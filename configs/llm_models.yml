@@ -1,0 +1,14 @@
+models:
+  gemma4_e2b:
+    label: "Gemma 4 E2B"
+    model: google/gemma-4-E2B-it
+    is_multimodal: true
+    api:
+      url: ${VLLM_URL:http://localhost:8001/v1}
+      health_check: /models
+    inference:
+      temperature: 0.7
+      top_p: 0.9
+      max_tokens: 4096
+
+default_model: gemma4_e2b

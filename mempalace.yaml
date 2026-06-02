@@ -1,0 +1,35 @@
+wing: chatbot_rag
+rooms:
+- name: backend
+  description: Files from models/
+  keywords:
+  - backend
+  - models
+- name: frontend
+  description: Files from ui/
+  keywords:
+  - frontend
+  - ui
+- name: scripts
+  description: Files from scripts/
+  keywords:
+  - scripts
+  - scripts
+- name: app
+  description: Files from app/
+  keywords:
+  - app
+  - app
+- name: configuration
+  description: Files from configs/
+  keywords:
+  - configuration
+  - configs
+- name: workspace
+  description: Files from workspace/
+  keywords:
+  - workspace
+  - workspace
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []

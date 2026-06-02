@@ -1,0 +1,90 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./configs:/app/configs
+      - ./workspace:/app/workspace
+      - hf_cache:/root/.cache/huggingface
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - VLLM_URL=http://llamacpp:8001/v1
+    depends_on:
+      - qdrant
+    networks:
+      - chatbot-net
+
+  qdrant:
+    image: qdrant/qdrant:v1.14.0
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - chatbot-net
+
+  vllm:
+    image: vllm/vllm-openai:latest
+    ports:
+      - "8001:8001"
+    volumes:
+      - vllm_cache:/root/.cache
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN}
+    command: >
+      --model google/gemma-4-E4B-it
+      --port 8001
+      --max-model-len 8192
+      --gpu-memory-utilization 0.9
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - vllm
+    networks:
+      - chatbot-net
+
+  llamacpp:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./models:/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    command: >
+      --host 0.0.0.0
+      --port 8001
+      --model /models/gemma-4-E2B-it-Q4_K_M.gguf
+      --mmproj /models/mmproj-BF16.gguf
+      --ctx-size 16384
+      --n-gpu-layers -1
+      --parallel 1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - llamacpp
+    networks:
+      - chatbot-net
+
+volumes:
+  qdrant_data:
+  vllm_cache:
+  hf_cache:
+
+networks:
+  chatbot-net:
+    driver: bridge

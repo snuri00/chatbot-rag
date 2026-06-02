@@ -1,0 +1,20 @@
+qdrant:
+  url: ${QDRANT_URL:http://localhost:6333}
+  collection: museum_documents
+  vector_size: 1024
+  distance: Cosine
+
+embedding:
+  model: jinaai/jina-clip-v2
+  device: cpu
+  batch_size: 32
+
+ingestion:
+  chunk_size: 500
+  chunk_overlap: 50
+
+retrieval:
+  top_k: 5
+  score_threshold: 0.35
+
+log_level: INFO
